@@ -1,8 +1,16 @@
-import React from 'react'
+import React from "react";
 
 export default function Product(props) {
-    const {id, productName, price, producImate} = props.data;
+  const { id, productName, price, productImage } = props.data;
   return (
-    <div>Product</div>
-  )
+    <div className="product">
+      <img src={productImage} />
+      <div className="description">
+        <p>
+          <b>{productName}</b>
+        </p>
+        <p> ${price}</p>
+      </div>
+    </div>
+  );
 }
