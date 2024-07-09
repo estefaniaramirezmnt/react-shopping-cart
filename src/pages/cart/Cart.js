@@ -3,6 +3,8 @@ import { PRODUCTS } from "../../products";
 import { ShopContext } from "../../context/shop-context";
 import CartItem from "./CartItem";
 
+import "./cart.css";
+
 export default function Cart() {
   const { cartItems } = useContext(ShopContext);
   return (
