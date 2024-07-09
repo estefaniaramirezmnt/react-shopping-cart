@@ -1,5 +1,4 @@
-// shop-context.js
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { PRODUCTS } from "../products";
 
 export const ShopContext = createContext(null);
@@ -14,8 +13,21 @@ const getDefaultCart = () => {
   return cart;
 };
 
+const saveCartToLocalStorage = (cart) => {
+  localStorage.setItem('cartItems', JSON.stringify(cart));
+};
+
+const getCartFromLocalStorage = () => {
+  const savedCart = localStorage.getItem('cartItems');
+  return savedCart ? JSON.parse(savedCart) : getDefaultCart();
+};
+
 export const ShopContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState(getDefaultCart());
+  const [cartItems, setCartItems] = useState(getCartFromLocalStorage());
+
+  useEffect(() => {
+    saveCartToLocalStorage(cartItems);
+  }, [cartItems]);
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
@@ -29,15 +41,27 @@ export const ShopContextProvider = (props) => {
   };
 
   const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    setCartItems((prev) => {
+      const updatedCart = { ...prev, [itemId]: prev[itemId] + 1 };
+      saveCartToLocalStorage(updatedCart);
+      return updatedCart;
+    });
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    setCartItems((prev) => {
+      const updatedCart = { ...prev, [itemId]: prev[itemId] - 1 };
+      saveCartToLocalStorage(updatedCart);
+      return updatedCart;
+    });
   };
 
   const updateCartItemCount = (newAmount, itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: newAmount }));
+    setCartItems((prev) => {
+      const updatedCart = { ...prev, [itemId]: newAmount };
+      saveCartToLocalStorage(updatedCart);
+      return updatedCart;
+    });
   };
 
   const contextValue = {
@@ -48,7 +72,6 @@ export const ShopContextProvider = (props) => {
     getTotalCartAmount
   };
 
-  console.log(cartItems);
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}
