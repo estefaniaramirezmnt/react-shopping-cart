@@ -21,15 +21,19 @@ export default function Cart() {
       <div className="cartItems">
         {PRODUCTS.map((product) => {
           if (cartItems[product.id] !== 0) {
-            return <CartItem data={product}/>;
+            return <CartItem data={product} />;
           }
         })}
       </div>
-      <div className="checkout">
-        <p>Subtotal: ${totalAmount}</p>
-        <button onClick={() => navigate("/")}>Continue Shopping</button>
-        <button>Checkout</button>
-      </div>
+      {totalAmount > 0 ? (
+        <div className="checkout">
+          <p>Subtotal: ${totalAmount}</p>
+          <button onClick={() => navigate("/")}>Continue Shopping</button>
+          <button>Checkout</button>
+        </div>
+      ) : (
+        <h2> Your cart is empty</h2>
+      )}
     </div>
   );
 }
